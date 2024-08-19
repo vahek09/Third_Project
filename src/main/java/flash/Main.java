@@ -1,3 +1,5 @@
+package flash;
+
 import java.io.*;
 import java.util.*;
 

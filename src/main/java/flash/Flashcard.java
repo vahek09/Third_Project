@@ -1,3 +1,5 @@
+package flash;
+
 public class Flashcard {
     String definition;
     int mistakes;
