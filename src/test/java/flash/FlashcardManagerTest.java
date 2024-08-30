@@ -18,7 +18,7 @@ class FlashcardManagerTest {
     @BeforeEach
     void setUp() {
         flashcardManager = new FlashcardManager();
-        logManager = Mockito.mock(LogManager.class); // Mock LogManager
+        logManager = Mockito.mock(LogManager.class);
     }
 
     @Test
