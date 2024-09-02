@@ -54,9 +54,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M2</version>
                 <configuration>
-<!--                    <argLine>-->
-<!--                        -XX:+EnableDynamicAgentLoading-->
-<!--                    </argLine>-->
                 </configuration>
             </plugin>
             <!-- PMD Plugin -->
@@ -129,7 +126,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.70</minimum>
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
