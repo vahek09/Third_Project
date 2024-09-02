@@ -144,11 +144,15 @@ public class FlashcardManager {
         logManager.logAndPrint("File name:");
         String fileName = scanner.nextLine().trim();
         logManager.addToLog(fileName);
+
         try {
             exportCards(fileName, logManager);
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
             logManager.logAndPrint("File not found: " + fileName);
-            throw new FileNotFoundException(e.getMessage());
+            throw e; // Re-throw the exception to propagate it to the caller
+        } catch (Exception e) {
+            logManager.logAndPrint("An unexpected error occurred: " + e.getMessage());
+            throw new RuntimeException(e); // Handle other unexpected exceptions
         }
     }
 
@@ -182,7 +186,16 @@ public class FlashcardManager {
      */
     public void askDefinitions(Scanner scanner, LogManager logManager) {
         logManager.logAndPrint("How many times to ask?");
-        int count = Integer.parseInt(scanner.nextLine().trim());
+        String input = scanner.nextLine().trim();
+
+        int count;
+        try {
+            count = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            logManager.logAndPrint("Invalid number format: " + input);
+            return;
+        }
+
         logManager.addToLog(String.valueOf(count));
 
         List<String> terms = new ArrayList<>(flashcards.keySet());
@@ -215,6 +228,7 @@ public class FlashcardManager {
         }
     }
 
+
     public void printHardestCard(LogManager logManager) {
         int maxMistakes = 0;
         for (Flashcard card : flashcards.values()) {
@@ -234,7 +248,7 @@ public class FlashcardManager {
             }
 
             if (hardestCards.size() == 1) {
-                logManager.logAndPrint("The hardest card is \"" + hardestCards.getFirst() + "\". You have " + maxMistakes + " errors answering it.");
+                logManager.logAndPrint("The hardest card is \"" + hardestCards.get(0) + "\". You have " + maxMistakes + " errors answering it.");
             } else {
                 logManager.logAndPrint("The hardest cards are \"" + String.join("\", \"", hardestCards) + "\". You have " + maxMistakes + " errors answering them.");
             }

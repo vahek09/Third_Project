@@ -11,11 +11,13 @@ import java.util.Scanner;
 public class LogManager {
     private final List<String> log = new ArrayList<>();
 
+    /** First Print a message, then adds to log*/
     public void logAndPrint(String message) {
         System.out.println(message);
         log.add(message);
     }
 
+    /** Add message only to log*/
     public void addToLog(String message) {
         log.add(message);
     }
@@ -34,4 +36,12 @@ public class LogManager {
             logAndPrint("Error writing to the file: " + e.getMessage());
         }
     }
+
+    /**
+     * Helper Method
+     * */
+    public List<String> getLog() {
+        return log;
+    }
+
 }
