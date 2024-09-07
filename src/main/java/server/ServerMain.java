@@ -1,4 +1,3 @@
-
 package server;
 
 import java.io.IOException;
@@ -11,17 +10,28 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerMain {
     private static final int PORT = 34567;
-    private final ExecutorService executor = Executors.newFixedThreadPool(10);
-    private final ConnectionManager connectionManager = new ConnectionManager();
+    private final ExecutorService executor;
+    private final ConnectionManager connectionManager;
+    private final ServerSocket serverSocket;
+
+    public ServerMain(ServerSocket serverSocket, ExecutorService executor, ConnectionManager connectionManager) {
+        this.serverSocket = serverSocket;
+        this.executor = executor;
+        this.connectionManager = connectionManager;
+    }
 
     public static void main(String[] args) throws IOException {
-        new ServerMain().startServer();
+        try (ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("localhost"))) {
+            ExecutorService executor = Executors.newFixedThreadPool(10);
+            ConnectionManager connectionManager = new ConnectionManager();
+            new ServerMain(serverSocket, executor, connectionManager).startServer();
+        }
     }
 
     public void startServer() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("localhost"))) {
-            System.out.println("Server started!");
+        System.out.println("Server started!");
 
+        try {
             while (true) {
                 Socket socket = serverSocket.accept();
                 executor.submit(() -> connectionManager.handleClient(socket));
@@ -31,7 +41,7 @@ public class ServerMain {
         }
     }
 
-    private void shutdown() {
+    public void shutdown() {
         executor.shutdown();
         try {
             if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
